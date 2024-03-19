@@ -1,8 +1,7 @@
 import { Hono } from 'hono'
 import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
-import { decode, sign, verify } from 'hono/jwt'
-
+import { sign, verify } from 'hono/jwt'
 
 const app = new Hono<{
   Bindings: {
@@ -10,6 +9,24 @@ const app = new Hono<{
     JWT_SECRET: string
   }
 }>()
+
+app.use('/api/v1/blog/*', async (c, next) => {
+  const header = c.req.header('Authorization') || ""
+  const token = header?.split(' ')[1]
+
+  const verifyToken = await verify(token, c.env.JWT_SECRET)
+
+  if (verifyToken) {
+    next()
+  }
+  else {
+    return c.json({
+      success: false,
+      message: "Invalid token"
+    })
+  }
+  await next()
+})
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
@@ -55,7 +72,8 @@ app.post('/api/v1/signin', async (c) => {
 
   const userExists = await prisma.user.findUnique({
     where: {
-      email: body.email
+      email: body.email,
+      password: body.password
     }
   })
 
