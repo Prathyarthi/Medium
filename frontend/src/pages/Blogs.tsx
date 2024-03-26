@@ -1,24 +1,30 @@
 import { Appbar } from "../components/Appbar";
 import { BlogCard } from "../components/BlogCard";
+import { useBlogs } from "../hooks";
+
 
 export function Blogs() {
+    const { loading, blogs } = useBlogs()
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
     return (
         <>
-            <Appbar/>
+            <Appbar />
             <div>
                 <div className="">
-                    <BlogCard authorName="Prathyarthi"
-                        title="Blog Title"
-                        content="This is the content of the blog"
-                        publishedDate="2nd November 2024" />
+                    {blogs.map((blog) => (
+                        <BlogCard
+                            key={blog.id}
+                            authorName={blog.authorName || "Anonymous"}
+                            title={blog.title}
+                            content={blog.content}
+                            publishedDate={blog.publishedDate}
+                        />
+                    ))}
                 </div>
-                <div className="">
-                    <BlogCard authorName="Prathyarthi"
-                        title="Blog Title"
-                        content="This is the content of the blog"
-                        publishedDate="2nd November 2024" />
-                </div>
-            </div>
+            </div >
         </>
     )
 }
