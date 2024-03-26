@@ -9,6 +9,28 @@ interface Blog {
     publishedDate: string
 }
 
+export const useBlog = ({ id }: { id: string }) => {
+    const [loading, setLoading] = useState(true)
+    const [blogs, setBlogs] = useState<Blog>()
+
+    useEffect(() => {
+        axiosInstance.get(`/api/v1/blog/blog/${id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+            .then((res) => {
+                setBlogs(res.data.blogs)
+                setLoading(false)
+            })
+    }, [])
+    return {
+        loading,
+        blogs
+    }
+}
+
+
 export const useBlogs = () => {
     const [loading, setLoading] = useState(true)
     const [blogs, setBlogs] = useState<Blog[]>([])

@@ -16,7 +16,7 @@ export function Blogs() {
                 <div className="">
                     {blogs.map((blog) => (
                         <BlogCard
-                            key={blog.id}
+                            id={blog.id}
                             authorName={blog.authorName || "Anonymous"}
                             title={blog.title}
                             content={blog.content}
