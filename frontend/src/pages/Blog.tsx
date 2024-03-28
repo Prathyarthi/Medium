@@ -1,3 +1,4 @@
+import { BlogComponent } from "../components/BlogComponent";
 import { useBlog } from "../hooks"
 import { useParams } from "react-router-dom";
 
@@ -12,6 +13,8 @@ export function Blog() {
     </div>
   }
   return (
-    <div>Blog</div>
+    <div>
+      <BlogComponent/>
+    </div>
   )
 }
